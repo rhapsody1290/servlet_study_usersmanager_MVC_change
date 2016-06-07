@@ -1,0 +1,8 @@
+.idea
+.myeclipse
+.settings
+classes/
+.classpath
+.mymetadata
+.project
+UsersManager.iml
