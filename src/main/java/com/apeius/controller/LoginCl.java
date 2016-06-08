@@ -26,6 +26,16 @@ public class LoginCl extends HttpServlet {
 		String[] hobby = request.getParameterValues("hobby");
 		String city = request.getParameter("city");
 		String intro = request.getParameter("intro");
+
+		//到数据库中验证
+		/*
+		* 1.加载驱动
+		* 2.得到连接
+		* 3.创建PrepareStatment
+		* 4.执行操作
+		* 5.根据结果做处理
+		* */
+
 		if(username != null && password != null){
 			//跳转到下一个页面，servlet提供了两种，sendRedirect 转向 和 forward 转发
 			//sendRediret的url应该/web应用名/servlet
