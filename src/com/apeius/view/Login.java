@@ -24,6 +24,7 @@ public class Login extends HttpServlet {
 		out.println("你的爱好：<input type = 'checkbox' name = 'hobby' value = '体育'>体育<input type = 'checkbox' name = 'hobby' value = '音乐'>音乐<br/>");
 		out.println("城市：<select name = 'city'><option value = '北京'>北京</option><option value = '上海'>上海</option></select><br/>");
 		out.println("自我介绍：<textarea name = 'intro'></textarea><br/>");
+		out.println("提交照片：<input type = 'file' name = 'photo'/><br/>");
 		out.println("<input type = 'submit' name = 'password' value = '提交'><br/>");
 		out.println("</form>");
 
