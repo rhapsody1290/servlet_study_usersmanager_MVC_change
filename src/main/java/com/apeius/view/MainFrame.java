@@ -32,6 +32,12 @@ public class MainFrame extends HttpServlet {
 		}
 		out.println("<p>城市:"+request.getSession().getAttribute("city")+"</p>");
 		out.println("<p>自我介绍:"+request.getSession().getAttribute("intro")+"</p>");
+
+		//用户操作
+		out.println("<a href = '/UsersManager/ManageUsers'>管理用户</a>");
+		out.println("<a href = /''>添加用户</a>");
+		out.println("<a href = ''>查找用户</a>");
+		out.println("<a href = ''>退出系统</a>");
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
