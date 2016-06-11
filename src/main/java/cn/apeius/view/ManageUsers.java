@@ -1,4 +1,4 @@
-package com.apeius.view;
+package cn.apeius.view;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

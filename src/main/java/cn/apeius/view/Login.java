@@ -1,4 +1,4 @@
-package com.apeius.view;
+package cn.apeius.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;

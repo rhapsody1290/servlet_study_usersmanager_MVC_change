@@ -1,4 +1,4 @@
-package com.apeius.controller;
+package cn.apeius.controller;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
