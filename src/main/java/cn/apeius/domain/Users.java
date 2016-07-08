@@ -49,24 +49,4 @@ public class Users {
     public void setPasswd(String passwd) {
         this.passwd = passwd;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    private String name;
-    private String pwd;
-
 }

@@ -17,6 +17,7 @@ public class ManageUsers extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
+
         PrintWriter out = response.getWriter();
         out.println("<h1>用户管理</h1>");
         //从数据库中取出数据
@@ -44,7 +45,7 @@ public class ManageUsers extends HttpServlet {
 
             ps = connection.prepareStatement("select * from users limit "+(pageNow-1)*pageSize+","+pageSize);
             rs = ps.executeQuery();
-            out.println("<table border = 1 width = 500px>");
+            out.println("<table border = '1px' width = 500px cellspacing = '0'>");
             out.println("<tr><th>id</th><th>username</th><th>email</th><th>grade</th><th>passwd</th></tr>");
             while(rs.next()){
                 out.println("<tr><td>"+rs.getInt(1)+"</td><td>"+rs.getString(2)+"</td><td>"+rs.getString(3)+"</td><td>"+rs.getInt(4)+"</td><td>"+rs.getString(5)+"</td></tr>");
@@ -78,6 +79,7 @@ public class ManageUsers extends HttpServlet {
                     e.printStackTrace();
                 }
             }
+
         }
     }
 
