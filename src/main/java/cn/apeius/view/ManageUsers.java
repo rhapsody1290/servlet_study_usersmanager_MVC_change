@@ -19,6 +19,8 @@ public class ManageUsers extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
 
         PrintWriter out = response.getWriter();
+        //回送Script
+        out.println("<script>function gotoPage(){var pageNow = document.getElementById('pageNow').value;window.location.href = '/UsersManager/ManageUsers?pageNow='+ pageNow;}</script>");
         out.println("<h1>用户管理</h1>");
         //从数据库中取出数据
         Connection connection = null;
@@ -30,6 +32,7 @@ public class ManageUsers extends HttpServlet {
         int pageCount = 0;
         int rowCount = 0;
 
+        //pageNow有默认值第一页
         String sPageNow = request.getParameter("pageNow");
         if(sPageNow != null){
             pageNow = Integer.parseInt(sPageNow);
@@ -39,6 +42,7 @@ public class ManageUsers extends HttpServlet {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet_users_manager","root","root");
             ps = connection.prepareStatement("select count(*) from users");
             rs = ps.executeQuery();
+            //把游标下移，重要！！！
             rs.next();
             rowCount = rs.getInt(1);
             pageCount = (rowCount - 1) / pageSize + 1;
@@ -51,10 +55,20 @@ public class ManageUsers extends HttpServlet {
                 out.println("<tr><td>"+rs.getInt(1)+"</td><td>"+rs.getString(2)+"</td><td>"+rs.getString(3)+"</td><td>"+rs.getInt(4)+"</td><td>"+rs.getString(5)+"</td></tr>");
             }
             out.println("</table>");
-            //打印
+            //上一页
+            if(pageNow > 1){
+                out.println("<a href = '/UsersManager/ManageUsers?pageNow="+ (pageNow -1) +"'>上一页</a>");
+            }
+            //打印选择第几行
             for(int i = 0; i < pageCount; i++){
                 out.println("<a href = '/UsersManager/ManageUsers?pageNow="+(i+1)+"'><"+ (i+1) +"></a>");
             }
+            //下一页
+            if(pageNow < pageCount){
+                out.println("<a href = '/UsersManager/ManageUsers?pageNow="+ (pageNow + 1) +"'>下一页</a>");
+            }
+            out.println("&nbsp;当前页：" + pageNow + "<br/><br/>");
+            out.println("跳转到：<input type = 'text' id = 'pageNow'/>页&nbsp;<input type = 'button' value = '跳转' onclick = 'gotoPage();'>");
         }catch (Exception e){
             e.printStackTrace();
         }finally {
