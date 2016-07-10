@@ -1,10 +1,11 @@
 package cn.apeius.view;
 
+import cn.apeius.utils.SqlHelper;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Result;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
@@ -22,10 +23,6 @@ public class ManageUsers extends HttpServlet {
         //回送Script
         out.println("<script>function gotoPage(){var pageNow = document.getElementById('pageNow').value;window.location.href = '/UsersManager/ManageUsers?pageNow='+ pageNow;}</script>");
         out.println("<h1>用户管理</h1>");
-        //从数据库中取出数据
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
 
         int pageNow = 1;
         int pageSize = 5;
@@ -34,70 +31,49 @@ public class ManageUsers extends HttpServlet {
 
         //pageNow有默认值第一页
         String sPageNow = request.getParameter("pageNow");
-        if(sPageNow != null){
+        if (sPageNow != null) {
             pageNow = Integer.parseInt(sPageNow);
         }
+        ResultSet rs = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet_users_manager","root","root");
-            ps = connection.prepareStatement("select count(*) from users");
-            rs = ps.executeQuery();
+            rs = SqlHelper.executeQuery("select count(*) from users", null);
             //把游标下移，重要！！！
             rs.next();
             rowCount = rs.getInt(1);
-            pageCount = (rowCount - 1) / pageSize + 1;
-
-            ps = connection.prepareStatement("select * from users limit "+(pageNow-1)*pageSize+","+pageSize);
-            rs = ps.executeQuery();
-            out.println("<table border = '1px' width = 500px cellspacing = '0'>");
-            out.println("<tr><th>id</th><th>username</th><th>email</th><th>grade</th><th>passwd</th></tr>");
-            while(rs.next()){
-                out.println("<tr><td>"+rs.getInt(1)+"</td><td>"+rs.getString(2)+"</td><td>"+rs.getString(3)+"</td><td>"+rs.getInt(4)+"</td><td>"+rs.getString(5)+"</td></tr>");
-            }
-            out.println("</table>");
-            //上一页
-            if(pageNow > 1){
-                out.println("<a href = '/UsersManager/ManageUsers?pageNow="+ (pageNow -1) +"'>上一页</a>");
-            }
-            //打印选择第几行
-            for(int i = 0; i < pageCount; i++){
-                out.println("<a href = '/UsersManager/ManageUsers?pageNow="+(i+1)+"'><"+ (i+1) +"></a>");
-            }
-            //下一页
-            if(pageNow < pageCount){
-                out.println("<a href = '/UsersManager/ManageUsers?pageNow="+ (pageNow + 1) +"'>下一页</a>");
-            }
-            out.println("&nbsp;当前页：" + pageNow + "<br/><br/>");
-            out.println("跳转到：<input type = 'text' id = 'pageNow'/>页&nbsp;<input type = 'button' value = '跳转' onclick = 'gotoPage();'>");
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            if(rs != null){
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(ps != null){
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(connection != null){
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
+        } catch (SQLException e1) {
+            e1.printStackTrace();
         }
+        pageCount = (rowCount - 1) / pageSize + 1;
+
+        rs = SqlHelper.executeQuery("select * from users limit " + (pageNow - 1) * pageSize + "," + pageSize, null);
+        out.println("<table border = '1px' width = 500px cellspacing = '0'>");
+        out.println("<tr><th>id</th><th>username</th><th>email</th><th>grade</th><th>passwd</th></tr>");
+        try {
+            while (rs.next()) {
+                out.println("<tr><td>" + rs.getInt(1) + "</td><td>" + rs.getString(2) + "</td><td>" + rs.getString(3) + "</td><td>" + rs.getInt(4) + "</td><td>" + rs.getString(5) + "</td></tr>");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        out.println("</table>");
+        //上一页
+        if (pageNow > 1) {
+            out.println("<a href = '/UsersManager/ManageUsers?pageNow=" + (pageNow - 1) + "'>上一页</a>");
+        }
+        //打印选择第几行
+        for (int i = 0; i < pageCount; i++) {
+            out.println("<a href = '/UsersManager/ManageUsers?pageNow=" + (i + 1) + "'><" + (i + 1) + "></a>");
+        }
+        //下一页
+        if (pageNow < pageCount) {
+            out.println("<a href = '/UsersManager/ManageUsers?pageNow=" + (pageNow + 1) + "'>下一页</a>");
+        }
+        out.println("&nbsp;当前页：" + pageNow + "<br/><br/>");
+        out.println("跳转到：<input type = 'text' id = 'pageNow'/>页&nbsp;<input type = 'button' value = '跳转' onclick = 'gotoPage();'>");
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.doPost(request,response);
+        this.doPost(request, response);
     }
 }
