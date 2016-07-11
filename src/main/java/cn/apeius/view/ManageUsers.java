@@ -1,5 +1,7 @@
 package cn.apeius.view;
 
+import cn.apeius.domain.Users;
+import cn.apeius.service.UsersService;
 import cn.apeius.utils.SqlHelper;
 
 import javax.servlet.ServletException;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by Asus on 2016/6/9.
@@ -34,27 +37,20 @@ public class ManageUsers extends HttpServlet {
         if (sPageNow != null) {
             pageNow = Integer.parseInt(sPageNow);
         }
-        ResultSet rs = null;
-        try {
-            rs = SqlHelper.executeQuery("select count(*) from users", null);
-            //把游标下移，重要！！！
-            rs.next();
-            rowCount = rs.getInt(1);
-        } catch (SQLException e1) {
-            e1.printStackTrace();
-        }
-        pageCount = (rowCount - 1) / pageSize + 1;
+        //创建UsersService对象
+        UsersService usersService = new UsersService();
+        //获得页数
+        pageCount = usersService.getPageCount(pageSize);
+        //根据pageNow和pageSize获取用户
+        ArrayList<Users> users = usersService.getUsersByPage(pageNow, pageSize);
 
-        rs = SqlHelper.executeQuery("select * from users limit " + (pageNow - 1) * pageSize + "," + pageSize, null);
         out.println("<table border = '1px' width = 500px cellspacing = '0'>");
         out.println("<tr><th>id</th><th>username</th><th>email</th><th>grade</th><th>passwd</th></tr>");
-        try {
-            while (rs.next()) {
-                out.println("<tr><td>" + rs.getInt(1) + "</td><td>" + rs.getString(2) + "</td><td>" + rs.getString(3) + "</td><td>" + rs.getInt(4) + "</td><td>" + rs.getString(5) + "</td></tr>");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        for(Users u : users){
+            out.println("<tr><td>" + u.getId() + "</td><td>" + u.getUsername() + "</td><td>" + u.getEmail() + "</td><td>" + u.getGrade() + "</td><td>" + u.getPasswd() + "</td></tr>");
         }
+
         out.println("</table>");
         //上一页
         if (pageNow > 1) {
