@@ -18,8 +18,8 @@ public class Login extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.println("<h1>用户登录</h1>");
 		out.println("<form action = '/UsersManager/LoginCl' method = 'post'> ");
-		out.println("用户名：<input type = 'text' name = 'username'><br/>");
-		out.println("密码：<input type = 'password' name = 'password'><br/>");
+		out.println("用户名：<input type = 'text' name = 'username' value='qm'><br/>");
+		out.println("密码：<input type = 'password' name = 'password' ' value = 'qm''><br/>");
 		out.println("<input type = 'radio' name = 'sex' value = '男' checked>男<input type = 'radio' name = 'sex' value = '女'>女<br/>");
 		out.println("你的爱好：<input type = 'checkbox' name = 'hobby' value = '体育'>体育<input type = 'checkbox' name = 'hobby' value = '音乐'>音乐<br/>");
 		out.println("城市：<select name = 'city'><option value = '北京'>北京</option><option value = '上海'>上海</option></select><br/>");

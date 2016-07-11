@@ -45,10 +45,12 @@ public class ManageUsers extends HttpServlet {
         ArrayList<Users> users = usersService.getUsersByPage(pageNow, pageSize);
 
         out.println("<table border = '1px' width = 500px cellspacing = '0'>");
-        out.println("<tr><th>id</th><th>username</th><th>email</th><th>grade</th><th>passwd</th></tr>");
+        out.println("<tr><th>id</th><th>username</th><th>email</th><th>grade</th><th>passwd</th><th>删除用户</th><th>修改用户</th></tr>");
 
         for(Users u : users){
-            out.println("<tr><td>" + u.getId() + "</td><td>" + u.getUsername() + "</td><td>" + u.getEmail() + "</td><td>" + u.getGrade() + "</td><td>" + u.getPasswd() + "</td></tr>");
+            out.println("<tr><td>" + u.getId() + "</td><td>" + u.getUsername() + "</td><td>" + u.getEmail() + "</td><td>"
+                    + u.getGrade() + "</td><td>" + u.getPasswd() + "</td>" +
+                    "<td><a onclick = 'return confirm(\"确定是否删除？\");' href = '/UsersManager/DeleteCl?id="+u.getId()+"'>删除用户</a></td><td><a href = ''>修改用户</a></td></tr>");
         }
 
         out.println("</table>");
@@ -65,7 +67,9 @@ public class ManageUsers extends HttpServlet {
             out.println("<a href = '/UsersManager/ManageUsers?pageNow=" + (pageNow + 1) + "'>下一页</a>");
         }
         out.println("&nbsp;当前页：" + pageNow + "<br/><br/>");
-        out.println("跳转到：<input type = 'text' id = 'pageNow'/>页&nbsp;<input type = 'button' value = '跳转' onclick = 'gotoPage();'>");
+        out.println("跳转到：<input type = 'text' id = 'pageNow'/>页&nbsp;<input type = 'button' value = '跳转' onclick = 'gotoPage();'><br/>");
+
+        out.println("<a href = '/UsersManager/MainFrame'>跳转到主页面</a>");
 
     }
 

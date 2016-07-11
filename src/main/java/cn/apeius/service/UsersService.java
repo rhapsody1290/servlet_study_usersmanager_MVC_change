@@ -10,9 +10,6 @@ import java.util.ArrayList;
  * Created by Asus on 2016/6/11.
  */
 public class UsersService {
-    private Connection connection = null;
-    private PreparedStatement ps = null;
-    private ResultSet rs = null;
     //验证用户的函数
     public boolean checkUser(Users user){
         boolean b = false;
@@ -68,4 +65,41 @@ public class UsersService {
         return al;
 
     }
+    //删除用户
+    public boolean deleteUser(String id){
+        boolean b = true;
+        String sql = "delete from users where id = ?";
+        String parameters[] = {id};
+        try {
+            SqlHelper.executeUpdate(sql, parameters);
+        }catch (Exception e){
+            b = false;
+        }
+        return b;
+    }
+    //添加用户
+    public boolean addUser(Users user){
+        boolean b = true;
+        String sql = "insert into users(username,email,grade,passwd) values(?,?,?,?)";
+        String parameters[] = {user.getUsername(),user.getEmail(),String.valueOf(user.getGrade()),user.getPasswd()};
+        try{
+            SqlHelper.executeUpdate(sql,parameters);
+        }catch (Exception e){
+            b = false;
+        }finally {
+            SqlHelper.close(SqlHelper.getRs(),SqlHelper.getPs(),SqlHelper.getCt());
+        }
+
+        return b;
+    }
+    public static void main(String[] args){
+        UsersService usersService = new UsersService();
+        Users u = new Users();
+        u.setUsername("qm");
+        u.setEmail("369201191@qq.com");
+        u.setGrade(1);
+        u.setPasswd("qm");
+        usersService.addUser(u);
+    }
+
 }

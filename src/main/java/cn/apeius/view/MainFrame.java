@@ -35,7 +35,7 @@ public class MainFrame extends HttpServlet {
 
 		//用户操作
 		out.println("<a href = '/UsersManager/ManageUsers'>管理用户</a>");
-		out.println("<a href = /''>添加用户</a>");
+		out.println("<a href = '/UsersManager/add_users.html'>添加用户</a>");
 		out.println("<a href = ''>查找用户</a>");
 		out.println("<a href = ''>退出系统</a>");
 	}
