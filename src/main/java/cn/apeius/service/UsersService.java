@@ -2,6 +2,7 @@ package cn.apeius.service;
 
 import cn.apeius.domain.Users;
 import cn.apeius.utils.SqlHelper;
+import sun.java2d.opengl.WGLSurfaceData;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,53 +16,40 @@ public class UsersService {
         boolean b = false;
         String sql = "select * from users where username = ? and passwd = ?";
         String parameters[] = {user.getUsername(),user.getPasswd()};
-        ResultSet rs = SqlHelper.executeQuery(sql,parameters);
-        try {
-            if(rs.next()){
-                b = true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        ArrayList al = SqlHelper.executeQuery2(sql,parameters);
+        if(al.size() > 0){
+            b = true;
         }
         return b;
     }
     //获得pageCount
     public int getPageCount(int pageSize){
-        ResultSet rs = SqlHelper.executeQuery("select count(*) from users", null);
-        int rowCount = 0;
-        try {
-            rs.next();
-            rowCount = rs.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            SqlHelper.close(rs,SqlHelper.getPs(),SqlHelper.getCt());
-        }
+        ArrayList al = SqlHelper.executeQuery2("select count(*) from users", null);
+        Object[] objs = (Object[]) al.get(0);
+        int rowCount = Integer.parseInt(objs[0].toString());
         return (rowCount - 1)/pageSize + 1;
-
-
     }
     //按照分页来获取用户列表
     public ArrayList<Users> getUsersByPage(int pageNow, int pageSize){
         ArrayList<Users> al = new ArrayList<Users>();
 
-        ResultSet rs = SqlHelper.executeQuery("select * from users limit " +
+        ArrayList rs = SqlHelper.executeQuery2("select * from users limit " +
                 (pageNow - 1) * pageSize + "," + pageSize, null);
-        try {
-            while(rs.next()){
-                Users user = new Users();
-                user.setId(rs.getInt("id"));
-                user.setUsername(rs.getString("username"));
-                user.setEmail(rs.getString("email"));
-                user.setGrade(rs.getInt("grade"));
-                user.setPasswd(rs.getString("passwd"));
-                al.add(user);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            SqlHelper.close(rs,SqlHelper.getPs(),SqlHelper.getCt());
+
+        for(int i = 0; i < rs.size(); i++){
+
+            Object[] objs = (Object[]) rs.get(i);
+            Users user = new Users();
+
+            user.setId(Integer.parseInt(objs[0].toString()));
+            user.setUsername(objs[1].toString());
+            user.setEmail(objs[2].toString());
+            user.setGrade(Integer.parseInt(objs[3].toString()));
+            user.setPasswd(objs[4].toString());
+
+            al.add(user);
         }
+
         return al;
 
     }
@@ -93,13 +81,7 @@ public class UsersService {
         return b;
     }
     public static void main(String[] args){
-        UsersService usersService = new UsersService();
-        Users u = new Users();
-        u.setUsername("qm");
-        u.setEmail("369201191@qq.com");
-        u.setGrade(1);
-        u.setPasswd("qm");
-        usersService.addUser(u);
+        UsersService u = new UsersService();
+        System.out.println(u.getUsersByPage(1,2));
     }
-
 }

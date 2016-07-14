@@ -2,6 +2,7 @@ package cn.apeius.utils;
 
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class SqlHelper {
@@ -129,6 +130,39 @@ public class SqlHelper {
 
         }
         return rs;
+    }
+    //对查询语句升级
+    public static ArrayList executeQuery2(String sql, String[] parameters) {
+        PreparedStatement ps = null;
+        Connection ct = null;
+        ResultSet rs = null;
+        try {
+            ct = getConnection();
+            ps = ct.prepareStatement(sql);
+            if (parameters != null) {
+                for (int i = 0; i < parameters.length; i++) {
+                    ps.setString(i + 1, parameters[i]);
+                }
+            }
+            rs = ps.executeQuery();
+            ArrayList al = new ArrayList();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int column = rsmd.getColumnCount();//这里可以得到你的查询语句结果得到几列
+            while(rs.next()){
+                Object[] ob = new Object[column];//表示一行数据
+                for(int i = 1; i <= column; i++){
+                    ob[i - 1] = rs.getObject(i);
+                }
+                al.add(ob);
+            }
+            return al;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            //关闭资源
+            close(rs,ps,ct);
+        }
     }
 
 
